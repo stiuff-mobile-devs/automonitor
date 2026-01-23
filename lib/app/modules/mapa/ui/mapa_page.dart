@@ -1,4 +1,5 @@
 import 'package:automonitor/app/components/appbar.dart';
+import 'package:automonitor/app/models/veiculo.dart';
 import 'package:automonitor/app/modules/mapa/controller/mapa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -10,7 +11,6 @@ class MapaPage extends GetView<MapaController> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: Appbar(title: "Mapa"),
 
@@ -18,16 +18,13 @@ class MapaPage extends GetView<MapaController> {
     );
   }
 
-  Widget Mapa(){
+  Widget Mapa() {
     return FlutterMap(
       options: MapOptions(
         initialCenter: LatLng(-22.8966, -43.1238),
         initialZoom: 15.0,
       ),
-      children: [
-        openstreetmap,
-        Markers(),
-      ],
+      children: [openstreetmap, Markers()],
     );
   }
 
@@ -36,17 +33,25 @@ class MapaPage extends GetView<MapaController> {
     userAgentPackageName: 'com.example.automonitor',
   );
 
-  Widget Markers(){
-    return MarkerLayer(markers: [
-      Marker(
-        point: LatLng(-22.8966, -43.1238), 
-        child: GestureDetector(
-          child: Icon(
-            Icons.location_pin,
-            color: Colors.red,
-          ),
-        )
-      )
-    ]);
+  Widget Markers() {
+    return Obx(() {
+      return MarkerLayer(
+        markers: controller.veiculos.map((veiculo) {
+          return Marker(
+            point: LatLng(veiculo.lat, veiculo.long),
+            child: GestureDetector(
+              onTap: () {
+                // popup depois
+              },
+              child: Icon(
+                Icons.location_pin,
+                color: Colors.red,
+                size: 40,
+              ),
+            ),
+          );
+        }).toList(),
+      );
+    });
   }
 }

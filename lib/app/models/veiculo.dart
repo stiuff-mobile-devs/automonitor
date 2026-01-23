@@ -1,7 +1,13 @@
-import 'package:latlong2/latlong.dart';
+class Veiculo{
+  final String id;
+  final double lat;
+  final double long;
+  final DateTime timestamp;
 
-class veiculo{
-  late LatLng position;
-
-   
+  Veiculo({
+    required this.id,
+    required this.lat,
+    required this.long,
+    required this.timestamp,
+  });
 }
