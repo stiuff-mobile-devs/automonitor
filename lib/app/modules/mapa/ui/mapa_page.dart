@@ -32,24 +32,30 @@ class MapaPage extends GetView<MapaController> {
     userAgentPackageName: 'com.example.automonitor',
   );
 
-  Widget markers() { // Coloca os marcadores no mapa
-    return Obx(() { // Atualiza quando algum marcador se move
-      return MarkerLayer(
-        markers: controller.veiculos.map((veiculo) {
-          return Marker(
-            point: LatLng(veiculo.lat, veiculo.long),
-            child: GestureDetector(
-              onTap: () {Get.dialog(popUp(veiculo));},
-              child: Icon(
-                Icons.location_pin,
-                color: Colors.red,
-                size: 50,
+  Widget markers() {
+    return GetBuilder<MapaController>(
+      builder: (controller) {
+        return MarkerLayer(
+          markers: controller.veiculos.map((veiculo) {
+            return Marker(
+              point: LatLng(veiculo.lat, veiculo.long),
+              child: RepaintBoundary(
+                child: GestureDetector(
+                  onTap: () {
+                    Get.dialog(popUp(veiculo));
+                  },
+                  child: const Icon(
+                    Icons.location_pin,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+                ),
               ),
-            ),
-          );
-        }).toList(),
-      );
-    });
+            );
+          }).toList(),
+        );
+      },
+    );
   }
 
   Widget popUp(Veiculo veiculo) {
@@ -61,7 +67,7 @@ class MapaPage extends GetView<MapaController> {
         children: [
           Text('ID:  ${veiculo.id}'),
           Text('Lat: ${veiculo.lat}'),
-          Text('Lng: ${veiculo.long}'),
+          Text('Long: ${veiculo.long}'),
         ],
       ),
     );

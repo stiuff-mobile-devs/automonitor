@@ -5,8 +5,7 @@ import 'package:get/get.dart';
 
 class MapaController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final RxList<Veiculo> veiculos = <Veiculo>[].obs;
-  StreamSubscription? _inscricoesVeiculos;
+  List<Veiculo> veiculos = [];  StreamSubscription? _inscricoesVeiculos;
 
   @override
   void onInit(){
@@ -22,16 +21,16 @@ class MapaController extends GetxController {
         final List<Veiculo> veiculosAtualizados = [];
         for (var doc in snapshot.docs) {
           final data = doc.data();
-          if (data['lat'] == null || data['lng'] == null) continue;
+          if (data['lat'] == null || (data['lng'] == null && data['long'] == null)) continue;
           final vehicle = Veiculo(
             id: doc.id, 
-            lat: (data['lat'] as num).toDouble(), 
-            long: (data['lng'] as num).toDouble(), 
+            lat: (data['lat'] as num).toDouble(),
+            long: (data['long'] == null) ? (data['lng'] as num).toDouble(): (data['long'] as num).toDouble() , 
             timestamp: (data['timestamp'] as Timestamp).toDate()
           );
           veiculosAtualizados.add(vehicle);
         }
-        veiculos.value = veiculosAtualizados;
+        veiculos = veiculosAtualizados;
       });
   }
 
