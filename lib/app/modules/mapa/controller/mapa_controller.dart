@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 
 class MapaController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Veiculo> veiculos = [];  StreamSubscription? _inscricoesVeiculos;
+  List<Veiculo> veiculos = [];  
+  StreamSubscription? _inscricoesVeiculos;
 
   @override
   void onInit(){
@@ -31,6 +32,7 @@ class MapaController extends GetxController {
           veiculosAtualizados.add(vehicle);
         }
         veiculos = veiculosAtualizados;
+        update();
       });
   }
 
