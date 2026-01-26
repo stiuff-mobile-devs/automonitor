@@ -1,5 +1,4 @@
 import 'package:automonitor/app/components/appbar.dart';
-import 'package:automonitor/app/models/veiculo.dart';
 import 'package:automonitor/app/modules/mapa/controller/mapa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -36,40 +35,9 @@ class MapaPage extends GetView<MapaController> {
     return GetBuilder<MapaController>(
       builder: (controller) {
         return MarkerLayer(
-          markers: controller.veiculos.map((veiculo) {
-            return Marker(
-              point: LatLng(veiculo.lat, veiculo.long),
-              child: RepaintBoundary(
-                child: GestureDetector(
-                  onTap: () {
-                    Get.dialog(popUp(veiculo));
-                  },
-                  child: const Icon(
-                    Icons.location_pin,
-                    color: Colors.red,
-                    size: 50,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
+          markers: controller.listaDeMarkers,
         );
       },
-    );
-  }
-
-  Widget popUp(Veiculo veiculo) {
-    return AlertDialog(
-      title: Text("Veiculo"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text('ID:  ${veiculo.id}'),
-          Text('Lat: ${veiculo.lat}'),
-          Text('Long: ${veiculo.long}'),
-        ],
-      ),
     );
   }
 }
