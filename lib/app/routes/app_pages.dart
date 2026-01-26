@@ -1,5 +1,3 @@
-import 'package:automonitor/app/modules/dashboard/bindings/home_bindings.dart';
-import 'package:automonitor/app/modules/dashboard/ui/home_page.dart';
 import 'package:automonitor/app/modules/mapa/bindings/mapa_bindings.dart';
 import 'package:automonitor/app/modules/mapa/ui/mapa_page.dart';
 import 'package:automonitor/app/modules/splash/bindings/splash_bindings.dart';
@@ -13,11 +11,6 @@ abstract class AppPages {
       name: Routes.SPLASH, 
       page: () => SplashPage(),
       binding: SplashBindings(),
-    ),
-    GetPage(
-      name: Routes.HOME,
-      page: () => HomePage(),
-      binding: HomeBindings()
     ),
     GetPage(
       name: Routes.MAPA, 
