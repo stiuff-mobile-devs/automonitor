@@ -1,80 +1,52 @@
-import 'dart:async';
 import 'package:automonitor/app/models/veiculo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
-import 'package:latlong2/latlong.dart';
 
 class MapaController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Veiculo> veiculos = [];
-  List<Marker> listaDeMarkers = [];  
-  StreamSubscription? _inscricoesVeiculos;
+  RxList<Veiculo> veiculos = <Veiculo>[].obs;
+  late final MapController mapController;
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
-    _listenVehicles();
-  }
-
-  void _listenVehicles(){
-    _inscricoesVeiculos = _firestore
-      .collection('locations')
-      .snapshots()
-      .listen((snapshot){
-        final List<Veiculo> veiculosAtualizados = [];
-        for (var doc in snapshot.docs) {
+    mapController = MapController();
+    
+    veiculos.bindStream(
+      _firestore.collection('locations').snapshots().map((snapshot) {
+        return snapshot.docs.map((doc) {
           final data = doc.data();
-          if (data['lat'] == null || (data['lng'] == null && data['long'] == null)) continue;
-          final vehicle = Veiculo(
-            id: doc.id, 
+          return Veiculo(
+            id: doc.id,
             lat: (data['lat'] as num).toDouble(),
-            long: (data['long'] == null) ? (data['lng'] as num).toDouble(): (data['long'] as num).toDouble() , 
-            timestamp: (data['timestamp'] as Timestamp).toDate()
+            long: (data['long'] ?? data['lng'] as num).toDouble(),
+            timestamp: (data['timestamp'] as Timestamp).toDate(),
           );
-          veiculosAtualizados.add(vehicle);
-        }
-          listaDeMarkers = veiculosAtualizados.map((veiculo) => Marker(
-          point: LatLng(veiculo.lat, veiculo.long),
-          width: 50,
-          height: 50,
-          child: _buildMarkerWidget(veiculo), // Widget separado
-        )).toList();
-        veiculos = veiculosAtualizados;
-        update();
-      });
-  }
-
-  Widget _buildMarkerWidget(Veiculo veiculo) {
-    return GestureDetector(
-      onTap: () => Get.dialog(popUp(veiculo)), // Mova o popUp para o controller ou use uma função estática
-      child: const Icon(
-        Icons.location_pin,
-        color: Colors.red,
-        size: 50,
-      ),
+        }).toList();
+      }),
     );
   }
 
     Widget popUp(Veiculo veiculo) {
-    return AlertDialog(
-      title: Text("Veiculo"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text('ID:  ${veiculo.id}'),
-          Text('Lat: ${veiculo.lat}'),
-          Text('Long: ${veiculo.long}'),
-        ],
-      ),
-    );
-  }
+      return AlertDialog(
+        title: Text("Veiculo"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('ID:  ${veiculo.id}'),
+            Text('Lat: ${veiculo.lat}'),
+            Text('Long: ${veiculo.long}'),
+          ],
+        ),
+      );
+    }
 
   @override
-  void onClose(){
-    _inscricoesVeiculos?.cancel();
+  void onClose() {
+    mapController.dispose();
     super.onClose();
   }
 }

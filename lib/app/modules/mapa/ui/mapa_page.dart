@@ -2,42 +2,47 @@ import 'package:automonitor/app/components/appbar.dart';
 import 'package:automonitor/app/modules/mapa/controller/mapa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapaPage extends GetView<MapaController> {
-  const MapaPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Appbar(title: "AutoMonitor"),
-      body: mapa(),
+      body: FlutterMap(
+        mapController: controller.mapController,
+        options: MapOptions(
+          initialCenter: LatLng(-22.8966, -43.1238),
+          initialZoom: 15.0,
+        ),
+        children: [mapa(), markers()],
+      )
     );
   }
 
   Widget mapa() {
-    return FlutterMap(
-      options: MapOptions(
-        initialCenter: LatLng(-22.8966, -43.1238),
-        initialZoom: 15.0,
-      ),
-      children: [openstreetmap, markers()],
+    return TileLayer(
+      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      userAgentPackageName: 'com.example.automonitor',
+      keepBuffer: 1, 
+      tileProvider: CancellableNetworkTileProvider(),
     );
   }
 
-  TileLayer get openstreetmap => TileLayer( // Renderiza o mapa
-    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    userAgentPackageName: 'com.example.automonitor',
-  );
-
   Widget markers() {
-    return GetBuilder<MapaController>(
-      builder: (controller) {
-        return MarkerLayer(
-          markers: controller.listaDeMarkers,
-        );
-      },
-    );
+    return Obx(() => MarkerLayer(
+      markers: controller.veiculos.map((veiculo) => Marker(
+        point: LatLng(veiculo.lat, veiculo.long),
+        width: 50,
+        height: 50,
+        child: GestureDetector(
+          onTap: () => Get.dialog(controller.popUp(veiculo)),
+          child: const Icon(Icons.location_pin, color: Colors.red, size: 50),
+        ),
+      )).toList(),
+    ));
   }
 }
