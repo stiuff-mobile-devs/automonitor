@@ -13,6 +13,6 @@ class SplashController extends GetxController {
 
   void onEnd() {
     // Navegar para a página inicial após o splash
-    Get.offAllNamed(Routes.MAPA);
+    Get.offAllNamed(Routes.LOGIN);
   }
 }

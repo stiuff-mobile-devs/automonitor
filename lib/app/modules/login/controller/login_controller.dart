@@ -16,7 +16,7 @@ class LoginController extends GetxController {
       UserModel? user = await _signInService.signInWithGoogle();
       if (user != null) {
         await _saveUser(user);
-        _goToHomePage();
+        _goToMapaPage();
       }
     } finally {
       isLoading(false);
@@ -30,7 +30,7 @@ class LoginController extends GetxController {
     }
   }
 
-  _goToHomePage() {
+  _goToMapaPage() {
     Get.offAllNamed(Routes.MAPA);
   }
 }

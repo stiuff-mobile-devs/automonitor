@@ -1,3 +1,5 @@
+import 'package:automonitor/app/modules/login/bindings/login_bindings.dart';
+import 'package:automonitor/app/modules/login/ui/login_page.dart';
 import 'package:automonitor/app/modules/mapa/bindings/mapa_bindings.dart';
 import 'package:automonitor/app/modules/mapa/ui/mapa_page.dart';
 import 'package:automonitor/app/modules/splash/bindings/splash_bindings.dart';
@@ -16,6 +18,11 @@ abstract class AppPages {
       name: Routes.MAPA, 
       page: () => MapaPage(),
       binding: MapaBindings()
+    ),
+    GetPage(
+      name: Routes.LOGIN,
+      page: () => LoginPage(),
+      binding: LoginBindings(),
     ),
   ];
 }

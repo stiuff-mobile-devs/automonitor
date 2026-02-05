@@ -43,7 +43,7 @@ class LoginPage extends GetView<LoginController> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'AutoAgent',
+                      'AutoMonitor',
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w800,
