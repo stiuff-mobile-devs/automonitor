@@ -58,6 +58,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1067878525854-hv1r1ljcf9bo8na1uiilsk2t4scrm5a0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.automonitor",
+            "certificate_hash": "9c37e0594642c22a8e453694c375849ebad97c60"
+          }
+        },
+        {
           "client_id": "1067878525854-q0vj925srh78qnphg0pldn9ibh1qv2m3.apps.googleusercontent.com",
           "client_type": 3
         }

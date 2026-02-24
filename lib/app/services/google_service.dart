@@ -7,63 +7,34 @@ import 'package:google_sign_in/google_sign_in.dart' as google;
 
 class GoogleService {
   final auth = fb.FirebaseAuth.instance;
-
-  // CORREÇÃO DEFINITIVA DO CONSTRUTOR:
-  // Na v7, usamos o Singleton '.instance'.
-  // Não passamos 'clientId' nem 'scopes' aqui, pois o construtor antigo sumiu.
   final google.GoogleSignIn googleSignIn = google.GoogleSignIn.instance;
-
-  // Lista de escopos centralizada
   final List<String> _scopes = ['email', 'profile'];
 
-  GoogleService();
+  // Inicialização v7: No Mobile, o serverClientId é essencial
+  late final Future<void> _init = kIsWeb 
+    ? Future.value() 
+    : googleSignIn.initialize(serverClientId: Secrets.googleApiKey);
 
-  Future<void> _ensureInitialized() async {
-    // Inicialização apenas para Mobile (Web usa fluxo puro do Firebase)
-    if (!kIsWeb) {
-      await googleSignIn.initialize();
-    }
-  }
+  GoogleService();
 
   Future<UserModel?> signInWithGoogle() async {
     try {
       if (kIsWeb) {
-        // --- WEB: FLUXO COM SECRETS ---
-        // Aqui está o pulo do gato: Configuramos o Provider do Firebase
-        // com o seu CLIENT ID do Secrets. Assim não precisa por no HTML.
-        
+        // --- ROTINA WEB (Sua versão que funciona) ---
         fb.GoogleAuthProvider authProvider = fb.GoogleAuthProvider();
-        
-        // Adiciona os escopos
         _scopes.forEach((scope) => authProvider.addScope(scope));
-        
-        // Injeta o ClientID via parâmetros customizados
-        authProvider.setCustomParameters({
-          'client_id': Secrets.googleApiKey, 
-        });
+        authProvider.setCustomParameters({'client_id': Secrets.googleApiKey});
 
-        // Abre o popup usando essa configuração segura
         fb.UserCredential result = await auth.signInWithPopup(authProvider);
         return _getUserModelFromFirebaseUser(result.user);
-        
       } else {
-        // --- MOBILE: FLUXO NATIVO v7 ---
-        await _ensureInitialized(); 
-
-        try {
-          // Na v7, passamos os scopes aqui se necessário, 
-          // mas o arquivo google-services.json gerencia a maioria.
-          // Usamos 'authenticate' em vez de 'signIn'.
-          final google.GoogleSignInAccount account = await googleSignIn.authenticate();
-          
-          return await _signInMobile(account);
-        } catch (e) {
-          print("Erro login mobile: $e");
-          return null;
-        }
+        // --- ROTINA MOBILE (Sua versão v7 funcional) ---
+        await _init;
+        final googleUser = await googleSignIn.authenticate();
+        return await _signInMobile(googleUser);
       }
     } catch (e) {
-      print("Erro geral: $e");
+      print("Erro no login: $e");
       return null;
     }
   }
@@ -72,43 +43,35 @@ class GoogleService {
     try {
       final google.GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-      // v7: Recupera Access Token via authorizationClient
-      final authClient = googleSignIn.authorizationClient;
-      final authorization = await authClient.authorizationForScopes(_scopes);
-
+      // Simplificação para Mobile: Firebase exige prioritariamente o idToken
       final credential = fb.GoogleAuthProvider.credential(
-        accessToken: authorization?.accessToken,
         idToken: googleAuth.idToken,
       );
 
       final userCredential = await auth.signInWithCredential(credential);
       return _getUserModelFromFirebaseUser(userCredential.user);
     } catch (e) {
-      print("Erro troca de tokens: $e");
+      print("Erro na troca de tokens mobile: $e");
       return null;
     }
   }
 
   Future<UserModel?> signInSilently() async {
     try {
-      // 1. Prioridade: Cache do Firebase (Web e Mobile)
       if (auth.currentUser != null) {
         return _getUserModelFromFirebaseUser(auth.currentUser);
       }
 
-      // 2. Mobile: Tenta login silencioso nativo da v7
       if (!kIsWeb) {
-         await _ensureInitialized();
-         
-         // 'attemptLightweightAuthentication' substitui 'signInSilently'
-         final account = await googleSignIn.attemptLightweightAuthentication();
-         
-         if (account != null) {
-           return await _signInMobile(account);
-         }
+        await _init;
+        final attempt = googleSignIn.attemptLightweightAuthentication();
+        if (attempt == null) return null;
+        final account = await attempt;
+        return account != null ? await _signInMobile(account) : null;
       }
       return null;
-    } catch (_) {
+    } catch (e) {
+      print("ERRO NO LOGIN MOBILE: $e"); // Isso vai te dizer o código real do erro no terminal
       return null;
     }
   }
@@ -123,11 +86,7 @@ class GoogleService {
   }
 
   Future<void> signOut() async {
-    if (!kIsWeb) {
-      try {
-        await googleSignIn.signOut();
-      } catch (_) {}
-    }
+    if (!kIsWeb) await googleSignIn.signOut();
     await auth.signOut();
   }
 }
