@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-show defaultTargetPlatform, kIsWeb, TargetPlatform;
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -56,7 +56,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAR3qE-edgsUKBVZNf6WpURz_wv2vXal-Q',
-    appId: '1:1067878525854:android:350437280de2296b6b048f',
+    appId: '1:1067878525854:android:00064b15ca6bfa876b048f',
     messagingSenderId: '1067878525854',
     projectId: 'autointelligence-762bb',
     storageBucket: 'autointelligence-762bb.firebasestorage.app',
@@ -64,10 +64,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCWV2_bJGSyUuKmZRKdzNmCzG16LAEv-jI',
-    appId: '1:1067878525854:ios:591f4fa3dbd571016b048f',
+    appId: '1:1067878525854:ios:9bcc123c78b24b1a6b048f',
     messagingSenderId: '1067878525854',
     projectId: 'autointelligence-762bb',
     storageBucket: 'autointelligence-762bb.firebasestorage.app',
-    iosBundleId: 'com.example.automonitor',
+    androidClientId: '1067878525854-hv1r1ljcf9bo8na1uiilsk2t4scrm5a0.apps.googleusercontent.com',
+    iosClientId: '1067878525854-dghmnf5nt15hv1t4n0p3e0sfgmhjc8hg.apps.googleusercontent.com',
+    iosBundleId: 'br.uff.sti.automonitor',
   );
+
 }

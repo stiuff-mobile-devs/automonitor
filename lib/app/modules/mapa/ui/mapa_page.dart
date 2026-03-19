@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapaPage extends GetView<MapaController> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,30 +18,40 @@ class MapaPage extends GetView<MapaController> {
           initialZoom: 15.0,
         ),
         children: [mapa(), markers()],
-      )
+      ),
     );
   }
 
   Widget mapa() {
     return TileLayer(
       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-      userAgentPackageName: 'com.example.automonitor',
-      keepBuffer: 1, 
+      userAgentPackageName: 'br.uff.sti.automonitor',
+      keepBuffer: 1,
       tileProvider: CancellableNetworkTileProvider(),
     );
   }
 
   Widget markers() {
-    return Obx(() => MarkerLayer(
-      markers: controller.veiculos.map((veiculo) => Marker(
-        point: LatLng(veiculo.lat, veiculo.long),
-        width: 50,
-        height: 50,
-        child: GestureDetector(
-          onTap: () => Get.dialog(controller.popUp(veiculo)),
-          child: const Icon(Icons.location_pin, color: Colors.red, size: 50),
-        ),
-      )).toList(),
-    ));
+    return Obx(
+      () => MarkerLayer(
+        markers: controller.veiculos
+            .map(
+              (veiculo) => Marker(
+                point: LatLng(veiculo.lat, veiculo.long),
+                width: 50,
+                height: 50,
+                child: GestureDetector(
+                  onTap: () => Get.dialog(controller.popUp(veiculo)),
+                  child: const Icon(
+                    Icons.location_pin,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
   }
 }

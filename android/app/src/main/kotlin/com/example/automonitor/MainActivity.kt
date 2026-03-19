@@ -1,4 +1,4 @@
-package com.example.automonitor
+package br.uff.sti.automonitor
 
 import io.flutter.embedding.android.FlutterActivity
 
