@@ -56,7 +56,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAR3qE-edgsUKBVZNf6WpURz_wv2vXal-Q',
-    appId: '1:1067878525854:android:00064b15ca6bfa876b048f',
+    appId: '1:1067878525854:android:397ffacbc790e8c36b048f',
     messagingSenderId: '1067878525854',
     projectId: 'autointelligence-762bb',
     storageBucket: 'autointelligence-762bb.firebasestorage.app',
@@ -64,13 +64,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCWV2_bJGSyUuKmZRKdzNmCzG16LAEv-jI',
-    appId: '1:1067878525854:ios:9bcc123c78b24b1a6b048f',
+    appId: '1:1067878525854:ios:711d4c0e4a7ff6796b048f',
     messagingSenderId: '1067878525854',
     projectId: 'autointelligence-762bb',
     storageBucket: 'autointelligence-762bb.firebasestorage.app',
-    androidClientId: '1067878525854-hv1r1ljcf9bo8na1uiilsk2t4scrm5a0.apps.googleusercontent.com',
-    iosClientId: '1067878525854-dghmnf5nt15hv1t4n0p3e0sfgmhjc8hg.apps.googleusercontent.com',
-    iosBundleId: 'br.uff.sti.automonitor',
+    androidClientId: '1067878525854-0nhoasp1o69dpqqdsudchnvpgervbvef.apps.googleusercontent.com',
+    iosClientId: '1067878525854-rr7sp9p298bulfguncci87f484ce99g4.apps.googleusercontent.com',
+    iosBundleId: 'br.uff.autoMonitor',
   );
 
 }

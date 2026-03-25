@@ -25,7 +25,7 @@ class MapaPage extends GetView<MapaController> {
   Widget mapa() {
     return TileLayer(
       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-      userAgentPackageName: 'br.uff.sti.automonitor',
+      userAgentPackageName: 'br.uff.autoMonitor',
       keepBuffer: 1,
       tileProvider: CancellableNetworkTileProvider(),
     );
